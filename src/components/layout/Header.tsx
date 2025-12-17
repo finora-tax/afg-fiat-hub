@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { 
   Wallet, 
@@ -8,16 +9,19 @@ import {
   User,
   Menu,
   X,
-  Shield
+  Shield,
+  LayoutDashboard
 } from "lucide-react";
 
 interface HeaderProps {
-  activeTab: string;
-  onTabChange: (tab: string) => void;
+  activeTab?: string;
+  onTabChange?: (tab: string) => void;
 }
 
 const Header = ({ activeTab, onTabChange }: HeaderProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const isAdminPage = location.pathname === "/admin";
 
   const navItems = [
     { id: "dashboard", label: "داشبورد", icon: Wallet },
@@ -31,7 +35,7 @@ const Header = ({ activeTab, onTabChange }: HeaderProps) => {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-3">
             <div className="relative">
               <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-emerald-600 flex items-center justify-center">
                 <Shield className="h-5 w-5 text-primary-foreground" />
@@ -42,28 +46,50 @@ const Header = ({ activeTab, onTabChange }: HeaderProps) => {
               <h1 className="text-lg font-bold text-foreground">صرافی افغان</h1>
               <p className="text-xs text-muted-foreground">Afghan Exchange</p>
             </div>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => onTabChange(item.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                  activeTab === item.id
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                }`}
+          {!isAdminPage && onTabChange && (
+            <nav className="hidden md:flex items-center gap-1">
+              {navItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => onTabChange(item.id)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                    activeTab === item.id
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                  }`}
+                >
+                  <item.icon className="h-4 w-4" />
+                  {item.label}
+                </button>
+              ))}
+            </nav>
+          )}
+
+          {isAdminPage && (
+            <nav className="hidden md:flex items-center gap-1">
+              <Link
+                to="/"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all"
               >
-                <item.icon className="h-4 w-4" />
-                {item.label}
-              </button>
-            ))}
-          </nav>
+                <Wallet className="h-4 w-4" />
+                صفحه اصلی
+              </Link>
+            </nav>
+          )}
 
           {/* User Actions */}
           <div className="flex items-center gap-3">
+            {!isAdminPage && (
+              <Link to="/admin">
+                <Button variant="ghost" size="sm" className="hidden sm:flex text-accent">
+                  <LayoutDashboard className="h-4 w-4 ml-2" />
+                  پنل ادمین
+                </Button>
+              </Link>
+            )}
             <Button variant="outline" size="sm" className="hidden sm:flex">
               <User className="h-4 w-4 ml-2" />
               ورود
@@ -91,23 +117,44 @@ const Header = ({ activeTab, onTabChange }: HeaderProps) => {
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-border/50 bg-background/95 backdrop-blur-xl">
           <nav className="container mx-auto px-4 py-4 flex flex-col gap-2">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => {
-                  onTabChange(item.id);
-                  setMobileMenuOpen(false);
-                }}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                  activeTab === item.id
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:bg-secondary"
-                }`}
+            {!isAdminPage && onTabChange ? (
+              navItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    onTabChange(item.id);
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                    activeTab === item.id
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:bg-secondary"
+                  }`}
+                >
+                  <item.icon className="h-5 w-5" />
+                  {item.label}
+                </button>
+              ))
+            ) : (
+              <Link
+                to="/"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-muted-foreground hover:bg-secondary"
+                onClick={() => setMobileMenuOpen(false)}
               >
-                <item.icon className="h-5 w-5" />
-                {item.label}
-              </button>
-            ))}
+                <Wallet className="h-5 w-5" />
+                صفحه اصلی
+              </Link>
+            )}
+            {!isAdminPage && (
+              <Link
+                to="/admin"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-accent hover:bg-secondary"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <LayoutDashboard className="h-5 w-5" />
+                پنل ادمین
+              </Link>
+            )}
             <div className="flex gap-2 mt-4 pt-4 border-t border-border/50">
               <Button variant="outline" className="flex-1">
                 ورود
