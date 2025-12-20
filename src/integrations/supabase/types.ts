@@ -14,16 +14,173 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      exchange_rates: {
+        Row: {
+          buy_rate: number
+          created_at: string
+          from_currency: string
+          id: string
+          sell_rate: number
+          to_currency: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          buy_rate: number
+          created_at?: string
+          from_currency: string
+          id?: string
+          sell_rate: number
+          to_currency: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          buy_rate?: number
+          created_at?: string
+          from_currency?: string
+          id?: string
+          sell_rate?: number
+          to_currency?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          address: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          kyc_status: string | null
+          phone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          kyc_status?: string | null
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          kyc_status?: string | null
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      transfers: {
+        Row: {
+          amount: number
+          converted_amount: number
+          created_at: string
+          exchange_rate: number
+          fee: number | null
+          from_currency: string
+          id: string
+          notes: string | null
+          recipient_account: string | null
+          recipient_name: string | null
+          recipient_phone: string | null
+          sender_name: string | null
+          sender_phone: string | null
+          status: Database["public"]["Enums"]["transfer_status"]
+          to_currency: string
+          transfer_type: Database["public"]["Enums"]["transfer_type"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          converted_amount: number
+          created_at?: string
+          exchange_rate: number
+          fee?: number | null
+          from_currency: string
+          id?: string
+          notes?: string | null
+          recipient_account?: string | null
+          recipient_name?: string | null
+          recipient_phone?: string | null
+          sender_name?: string | null
+          sender_phone?: string | null
+          status?: Database["public"]["Enums"]["transfer_status"]
+          to_currency: string
+          transfer_type: Database["public"]["Enums"]["transfer_type"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          converted_amount?: number
+          created_at?: string
+          exchange_rate?: number
+          fee?: number | null
+          from_currency?: string
+          id?: string
+          notes?: string | null
+          recipient_account?: string | null
+          recipient_name?: string | null
+          recipient_phone?: string | null
+          sender_name?: string | null
+          sender_phone?: string | null
+          status?: Database["public"]["Enums"]["transfer_status"]
+          to_currency?: string
+          transfer_type?: Database["public"]["Enums"]["transfer_type"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
+      transfer_status: "pending" | "completed" | "cancelled" | "failed"
+      transfer_type: "send" | "receive"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +307,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+      transfer_status: ["pending", "completed", "cancelled", "failed"],
+      transfer_type: ["send", "receive"],
+    },
   },
 } as const
