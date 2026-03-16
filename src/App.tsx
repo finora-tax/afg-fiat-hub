@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import Admin from "./pages/Admin";
 import Auth from "./pages/Auth";
+import Settings from "./pages/Settings";
 import SendTransfer from "./pages/SendTransfer";
 import ReceiveTransfer from "./pages/ReceiveTransfer";
 import PendingTransfers from "./pages/PendingTransfers";
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/settings" element={<Settings />} />
             <Route path="/transfers/send" element={<SendTransfer />} />
             <Route path="/transfers/receive" element={<ReceiveTransfer />} />
             <Route path="/transfers/pending" element={<PendingTransfers />} />
