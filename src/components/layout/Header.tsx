@@ -147,9 +147,16 @@ const Header = ({ activeTab, onTabChange }: HeaderProps) => {
                       حساب کاربری
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
+                    <DropdownMenuContent align="end">
                     <DropdownMenuItem className="text-muted-foreground text-xs">
                       {user.email}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link to="/settings" className="flex items-center gap-2 cursor-pointer">
+                        <Settings className="h-4 w-4 ml-2" />
+                        تنظیمات
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer">
