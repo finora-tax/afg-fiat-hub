@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
 import Header from "@/components/layout/Header";
 import { RateManagement } from "@/components/admin/RateManagement";
 import { UserManagement } from "@/components/admin/UserManagement";
@@ -6,15 +7,16 @@ import { KYCManagement } from "@/components/admin/KYCManagement";
 import { FinancialReports } from "@/components/admin/FinancialReports";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  TrendingUp, 
-  Users, 
-  Shield, 
-  BarChart3,
-  Settings
+  TrendingUp, Users, Shield, BarChart3, Settings
 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Admin = () => {
   const [activeTab, setActiveTab] = useState("rates");
+  const { user, isAdmin, isLoading } = useAuth();
+
+  if (isLoading) return null;
+  if (!user || !isAdmin) return <Navigate to="/" replace />;
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
@@ -49,21 +51,10 @@ const Admin = () => {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="rates">
-            <RateManagement />
-          </TabsContent>
-
-          <TabsContent value="users">
-            <UserManagement />
-          </TabsContent>
-
-          <TabsContent value="kyc">
-            <KYCManagement />
-          </TabsContent>
-
-          <TabsContent value="reports">
-            <FinancialReports />
-          </TabsContent>
+          <TabsContent value="rates"><RateManagement /></TabsContent>
+          <TabsContent value="users"><UserManagement /></TabsContent>
+          <TabsContent value="kyc"><KYCManagement /></TabsContent>
+          <TabsContent value="reports"><FinancialReports /></TabsContent>
         </Tabs>
       </main>
     </div>

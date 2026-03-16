@@ -1,74 +1,30 @@
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  CheckCircle, 
-  XCircle, 
-  Clock, 
-  FileText, 
-  User, 
-  Phone, 
-  Mail,
-  MapPin,
-  Calendar,
-  Eye
+  CheckCircle, XCircle, Clock, User, Phone, MapPin, Loader2
 } from "lucide-react";
 import { toast } from "sonner";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { supabase } from "@/integrations/supabase/client";
 
-const mockKycRequests = [
-  {
-    id: "1",
-    userId: "u1",
-    name: "فاطمه رحیمی",
-    email: "fatima@example.com",
-    phone: "+93 700 234 567",
-    address: "کابل، منطقه ۳",
-    nationalId: "1234567890",
-    birthDate: "1370/05/12",
-    submittedAt: "1402/10/05 14:30",
-    status: "pending",
-    documents: ["تذکره", "سند اقامت"],
-  },
-  {
-    id: "2",
-    userId: "u2",
-    name: "علی حسینی",
-    email: "ali@example.com",
-    phone: "+93 700 567 890",
-    address: "هرات، شهر نو",
-    nationalId: "0987654321",
-    birthDate: "1365/08/20",
-    submittedAt: "1402/10/04 10:15",
-    status: "pending",
-    documents: ["تذکره", "پاسپورت"],
-  },
-  {
-    id: "3",
-    userId: "u3",
-    name: "مریم احمدی",
-    email: "maryam@example.com",
-    phone: "+93 700 678 901",
-    address: "مزار شریف",
-    nationalId: "1122334455",
-    birthDate: "1375/02/08",
-    submittedAt: "1402/10/03 16:45",
-    status: "pending",
-    documents: ["تذکره"],
-  },
-];
+interface Profile {
+  id: string;
+  user_id: string;
+  full_name: string | null;
+  phone: string | null;
+  address: string | null;
+  kyc_status: string | null;
+  created_at: string;
+}
 
-const getStatusIcon = (status: string) => {
+const getStatusIcon = (status: string | null) => {
   switch (status) {
     case "verified":
       return <CheckCircle className="h-5 w-5 text-primary" />;
@@ -80,30 +36,67 @@ const getStatusIcon = (status: string) => {
 };
 
 export const KYCManagement = () => {
-  const [requests, setRequests] = useState(mockKycRequests);
-  const [selectedRequest, setSelectedRequest] = useState<typeof mockKycRequests[0] | null>(null);
+  const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [loading, setLoading] = useState(true);
   const [rejectionReason, setRejectionReason] = useState("");
 
-  const handleApprove = (id: string) => {
-    setRequests(requests.map(r => r.id === id ? { ...r, status: "verified" } : r));
-    toast.success("درخواست KYC تأیید شد");
+  const fetchProfiles = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      toast.error("خطا در دریافت اطلاعات");
+    } else {
+      setProfiles(data || []);
+    }
+    setLoading(false);
   };
 
-  const handleReject = (id: string) => {
+  useEffect(() => {
+    fetchProfiles();
+  }, []);
+
+  const handleApprove = async (userId: string) => {
+    const { error } = await supabase
+      .from("profiles")
+      .update({ kyc_status: "verified" })
+      .eq("user_id", userId);
+
+    if (error) {
+      toast.error("خطا در تأیید KYC");
+    } else {
+      toast.success("درخواست KYC تأیید شد");
+      fetchProfiles();
+    }
+  };
+
+  const handleReject = async (userId: string) => {
     if (!rejectionReason.trim()) {
       toast.error("لطفاً دلیل رد را وارد کنید");
       return;
     }
-    setRequests(requests.map(r => r.id === id ? { ...r, status: "rejected" } : r));
-    toast.success("درخواست KYC رد شد");
-    setRejectionReason("");
+    const { error } = await supabase
+      .from("profiles")
+      .update({ kyc_status: "rejected" })
+      .eq("user_id", userId);
+
+    if (error) {
+      toast.error("خطا در رد KYC");
+    } else {
+      toast.success("درخواست KYC رد شد");
+      setRejectionReason("");
+      fetchProfiles();
+    }
   };
 
-  const pendingRequests = requests.filter(r => r.status === "pending");
-  const verifiedRequests = requests.filter(r => r.status === "verified");
-  const rejectedRequests = requests.filter(r => r.status === "rejected");
+  const pendingProfiles = profiles.filter(p => p.kyc_status === "pending");
+  const verifiedProfiles = profiles.filter(p => p.kyc_status === "verified");
+  const rejectedProfiles = profiles.filter(p => p.kyc_status === "rejected");
 
-  const KycCard = ({ request }: { request: typeof mockKycRequests[0] }) => (
+  const KycCard = ({ profile }: { profile: Profile }) => (
     <Card className="bg-card border-border">
       <CardContent className="p-6">
         <div className="flex items-start justify-between mb-4">
@@ -112,88 +105,27 @@ export const KYCManagement = () => {
               <User className="h-6 w-6 text-muted-foreground" />
             </div>
             <div>
-              <h3 className="font-semibold text-foreground">{request.name}</h3>
-              <p className="text-sm text-muted-foreground">{request.submittedAt}</p>
+              <h3 className="font-semibold text-foreground">{profile.full_name || "بدون نام"}</h3>
+              <p className="text-sm text-muted-foreground">{new Date(profile.created_at).toLocaleDateString("fa-IR")}</p>
             </div>
           </div>
-          {getStatusIcon(request.status)}
+          {getStatusIcon(profile.kyc_status)}
         </div>
 
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div className="flex items-center gap-2 text-sm">
-            <Mail className="h-4 w-4 text-muted-foreground" />
-            <span className="text-muted-foreground" dir="ltr">{request.email}</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm">
             <Phone className="h-4 w-4 text-muted-foreground" />
-            <span className="text-muted-foreground" dir="ltr">{request.phone}</span>
+            <span className="text-muted-foreground" dir="ltr">{profile.phone || "—"}</span>
           </div>
           <div className="flex items-center gap-2 text-sm">
             <MapPin className="h-4 w-4 text-muted-foreground" />
-            <span className="text-muted-foreground">{request.address}</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            <span className="text-muted-foreground">{request.birthDate}</span>
+            <span className="text-muted-foreground">{profile.address || "—"}</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 mb-4">
-          <FileText className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">مدارک:</span>
-          {request.documents.map((doc, idx) => (
-            <Badge key={idx} variant="secondary" className="text-xs">
-              {doc}
-            </Badge>
-          ))}
-        </div>
-
-        {request.status === "pending" && (
+        {profile.kyc_status === "pending" && (
           <div className="flex items-center gap-2 pt-4 border-t border-border">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="outline" size="sm" className="flex-1">
-                  <Eye className="h-4 w-4 ml-2" />
-                  بررسی مدارک
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                  <DialogTitle>بررسی مدارک KYC - {request.name}</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4 p-4 bg-muted/50 rounded-lg">
-                    <div>
-                      <p className="text-sm text-muted-foreground">شماره تذکره</p>
-                      <p className="font-mono">{request.nationalId}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">تاریخ تولد</p>
-                      <p>{request.birthDate}</p>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>دلیل رد (در صورت رد)</Label>
-                    <Textarea
-                      value={rejectionReason}
-                      onChange={(e) => setRejectionReason(e.target.value)}
-                      placeholder="دلیل رد درخواست را وارد کنید..."
-                    />
-                  </div>
-                  <div className="flex gap-2">
-                    <Button onClick={() => handleApprove(request.id)} className="flex-1 bg-primary hover:bg-primary/90">
-                      <CheckCircle className="h-4 w-4 ml-2" />
-                      تأیید
-                    </Button>
-                    <Button onClick={() => handleReject(request.id)} variant="destructive" className="flex-1">
-                      <XCircle className="h-4 w-4 ml-2" />
-                      رد
-                    </Button>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
-            <Button onClick={() => handleApprove(request.id)} size="sm" className="bg-primary hover:bg-primary/90">
+            <Button onClick={() => handleApprove(profile.user_id)} size="sm" className="bg-primary hover:bg-primary/90">
               <CheckCircle className="h-4 w-4 ml-2" />
               تأیید
             </Button>
@@ -211,13 +143,9 @@ export const KYCManagement = () => {
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <Label>دلیل رد</Label>
-                    <Textarea
-                      value={rejectionReason}
-                      onChange={(e) => setRejectionReason(e.target.value)}
-                      placeholder="دلیل رد درخواست را وارد کنید..."
-                    />
+                    <Textarea value={rejectionReason} onChange={(e) => setRejectionReason(e.target.value)} placeholder="دلیل رد درخواست را وارد کنید..." />
                   </div>
-                  <Button onClick={() => handleReject(request.id)} variant="destructive" className="w-full">
+                  <Button onClick={() => handleReject(profile.user_id)} variant="destructive" className="w-full">
                     تأیید رد درخواست
                   </Button>
                 </div>
@@ -229,71 +157,44 @@ export const KYCManagement = () => {
     </Card>
   );
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-foreground">مدیریت احراز هویت (KYC)</h2>
-        <div className="flex items-center gap-4">
-          <Badge className="bg-accent/20 text-accent border-accent/30">
-            {pendingRequests.length} در انتظار
-          </Badge>
-        </div>
+        <Badge className="bg-accent/20 text-accent border-accent/30">
+          {pendingProfiles.length} در انتظار
+        </Badge>
       </div>
 
       <Tabs defaultValue="pending" className="w-full">
         <TabsList className="grid w-full max-w-md grid-cols-3">
-          <TabsTrigger value="pending" className="flex items-center gap-2">
-            <Clock className="h-4 w-4" />
-            در انتظار ({pendingRequests.length})
-          </TabsTrigger>
-          <TabsTrigger value="verified" className="flex items-center gap-2">
-            <CheckCircle className="h-4 w-4" />
-            تأیید شده ({verifiedRequests.length})
-          </TabsTrigger>
-          <TabsTrigger value="rejected" className="flex items-center gap-2">
-            <XCircle className="h-4 w-4" />
-            رد شده ({rejectedRequests.length})
-          </TabsTrigger>
+          <TabsTrigger value="pending"><Clock className="h-4 w-4 ml-1" />در انتظار ({pendingProfiles.length})</TabsTrigger>
+          <TabsTrigger value="verified"><CheckCircle className="h-4 w-4 ml-1" />تأیید شده ({verifiedProfiles.length})</TabsTrigger>
+          <TabsTrigger value="rejected"><XCircle className="h-4 w-4 ml-1" />رد شده ({rejectedProfiles.length})</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="pending" className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {pendingRequests.map((request) => (
-              <KycCard key={request.id} request={request} />
-            ))}
-            {pendingRequests.length === 0 && (
-              <p className="text-muted-foreground col-span-2 text-center py-8">
-                درخواست در انتظاری وجود ندارد
-              </p>
-            )}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="verified" className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {verifiedRequests.map((request) => (
-              <KycCard key={request.id} request={request} />
-            ))}
-            {verifiedRequests.length === 0 && (
-              <p className="text-muted-foreground col-span-2 text-center py-8">
-                درخواست تأیید شده‌ای وجود ندارد
-              </p>
-            )}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="rejected" className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {rejectedRequests.map((request) => (
-              <KycCard key={request.id} request={request} />
-            ))}
-            {rejectedRequests.length === 0 && (
-              <p className="text-muted-foreground col-span-2 text-center py-8">
-                درخواست رد شده‌ای وجود ندارد
-              </p>
-            )}
-          </div>
-        </TabsContent>
+        {[
+          { value: "pending", data: pendingProfiles },
+          { value: "verified", data: verifiedProfiles },
+          { value: "rejected", data: rejectedProfiles },
+        ].map(({ value, data }) => (
+          <TabsContent key={value} value={value} className="mt-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {data.map((profile) => <KycCard key={profile.id} profile={profile} />)}
+              {data.length === 0 && (
+                <p className="text-muted-foreground col-span-2 text-center py-8">درخواستی وجود ندارد</p>
+              )}
+            </div>
+          </TabsContent>
+        ))}
       </Tabs>
     </div>
   );
