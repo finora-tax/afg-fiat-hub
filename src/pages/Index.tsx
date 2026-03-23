@@ -4,6 +4,7 @@ import Dashboard from "@/components/dashboard/Dashboard";
 import ExchangeForm from "@/components/exchange/ExchangeForm";
 import TransactionList from "@/components/history/TransactionList";
 import SettingsPanel from "@/components/settings/SettingsPanel";
+import { useRealtimeNotifications } from "@/hooks/useRealtimeNotifications";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
