@@ -45,6 +45,8 @@ const Header = ({ activeTab, onTabChange }: HeaderProps) => {
     { id: "settings", label: "تنظیمات", icon: Settings },
   ];
 
+  const walletLink = { href: "/wallets", label: "کیف پول‌ها", icon: Wallet };
+
   const transferMenuItems = [
     { href: "/transfers/send", label: "ارسال حواله", icon: Send },
     { href: "/transfers/receive", label: "دریافت حواله", icon: Download },
