@@ -53,6 +53,8 @@ const SendTransfer = () => {
     fetchRates();
   }, []);
 
+  const [feeAmount, setFeeAmount] = useState(0);
+
   useEffect(() => {
     const rate = rates.find(
       (r) => r.from_currency === formData.fromCurrency && r.to_currency === formData.toCurrency
@@ -65,6 +67,17 @@ const SendTransfer = () => {
       setCurrentRate(0);
     }
   }, [formData.amount, formData.fromCurrency, formData.toCurrency, rates]);
+
+  // Fetch fee from database
+  useEffect(() => {
+    const fetchFee = async () => {
+      if (!formData.amount || parseFloat(formData.amount) <= 0) { setFeeAmount(0); return; }
+      const pair = `${formData.fromCurrency}-${formData.toCurrency}`;
+      const { data } = await supabase.rpc("calculate_fee", { _currency_pair: pair, _amount: parseFloat(formData.amount) });
+      setFeeAmount(typeof data === "number" ? data : parseFloat(formData.amount) * 0.01);
+    };
+    fetchFee();
+  }, [formData.amount, formData.fromCurrency, formData.toCurrency]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
