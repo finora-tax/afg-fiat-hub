@@ -95,7 +95,7 @@ const SendTransfer = () => {
 
     setIsLoading(true);
     
-    const fee = parseFloat(formData.amount) * 0.01; // 1% fee
+    const fee = feeAmount;
     
     const { error } = await supabase.from("transfers").insert({
       user_id: user.id,
