@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import Admin from "./pages/Admin";
 import Auth from "./pages/Auth";
 import Settings from "./pages/Settings";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import SendTransfer from "./pages/SendTransfer";
 import ReceiveTransfer from "./pages/ReceiveTransfer";
 import PendingTransfers from "./pages/PendingTransfers";
