@@ -42,7 +42,7 @@ export const FeeManagement = () => {
     else if (data) {
       setConfigs(data.map(d => ({
         ...d,
-        tiers: Array.isArray(d.tiers) ? d.tiers as Tier[] : [],
+        tiers: Array.isArray(d.tiers) ? (d.tiers as unknown as Tier[]) : [],
         fixed_fee: d.fixed_fee ?? 0,
         percentage_fee: d.percentage_fee ?? 0,
         min_fee: d.min_fee ?? 0,
