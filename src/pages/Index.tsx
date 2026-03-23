@@ -8,6 +8,7 @@ import { useRealtimeNotifications } from "@/hooks/useRealtimeNotifications";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
+  useRealtimeNotifications();
 
   const renderContent = () => {
     switch (activeTab) {
