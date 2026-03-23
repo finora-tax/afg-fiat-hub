@@ -265,8 +265,8 @@ const SendTransfer = () => {
                     <span className="font-mono">{formData.amount || 0} {formData.fromCurrency}</span>
                   </div>
                   <div className="flex justify-between text-sm mb-2">
-                    <span className="text-muted-foreground">کارمزد (1%):</span>
-                    <span className="font-mono">{(parseFloat(formData.amount || "0") * 0.01).toFixed(2)} {formData.fromCurrency}</span>
+                    <span className="text-muted-foreground">کارمزد:</span>
+                    <span className="font-mono">{feeAmount.toFixed(2)} {formData.fromCurrency}</span>
                   </div>
                   <div className="flex justify-between font-semibold pt-2 border-t border-border/50">
                     <span>مبلغ دریافتی گیرنده:</span>

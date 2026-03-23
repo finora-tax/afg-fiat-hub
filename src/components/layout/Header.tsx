@@ -95,6 +95,17 @@ const Header = ({ activeTab, onTabChange }: HeaderProps) => {
                 </button>
               ))}
 
+              {/* Wallet Link */}
+              {user && (
+                <Link
+                  to="/wallets"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all duration-300"
+                >
+                  <Wallet className="h-4 w-4" />
+                  کیف پول
+                </Link>
+              )}
+
               {/* Transfer Menu */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
