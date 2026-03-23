@@ -45,6 +45,8 @@ const Header = ({ activeTab, onTabChange }: HeaderProps) => {
     { id: "settings", label: "تنظیمات", icon: Settings },
   ];
 
+  const walletLink = { href: "/wallets", label: "کیف پول‌ها", icon: Wallet };
+
   const transferMenuItems = [
     { href: "/transfers/send", label: "ارسال حواله", icon: Send },
     { href: "/transfers/receive", label: "دریافت حواله", icon: Download },
@@ -92,6 +94,17 @@ const Header = ({ activeTab, onTabChange }: HeaderProps) => {
                   {item.label}
                 </button>
               ))}
+
+              {/* Wallet Link */}
+              {user && (
+                <Link
+                  to="/wallets"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all duration-300"
+                >
+                  <Wallet className="h-4 w-4" />
+                  کیف پول
+                </Link>
+              )}
 
               {/* Transfer Menu */}
               <DropdownMenu>

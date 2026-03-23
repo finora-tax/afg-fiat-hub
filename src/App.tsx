@@ -14,6 +14,7 @@ import SendTransfer from "./pages/SendTransfer";
 import ReceiveTransfer from "./pages/ReceiveTransfer";
 import PendingTransfers from "./pages/PendingTransfers";
 import TransferHistory from "./pages/TransferHistory";
+import Wallets from "./pages/Wallets";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,11 +33,11 @@ const App = () => (
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/wallets" element={<Wallets />} />
             <Route path="/transfers/send" element={<SendTransfer />} />
             <Route path="/transfers/receive" element={<ReceiveTransfer />} />
             <Route path="/transfers/pending" element={<PendingTransfers />} />
             <Route path="/transfers/history" element={<TransferHistory />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

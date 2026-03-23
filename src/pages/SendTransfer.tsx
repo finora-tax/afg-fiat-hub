@@ -53,6 +53,8 @@ const SendTransfer = () => {
     fetchRates();
   }, []);
 
+  const [feeAmount, setFeeAmount] = useState(0);
+
   useEffect(() => {
     const rate = rates.find(
       (r) => r.from_currency === formData.fromCurrency && r.to_currency === formData.toCurrency
@@ -65,6 +67,17 @@ const SendTransfer = () => {
       setCurrentRate(0);
     }
   }, [formData.amount, formData.fromCurrency, formData.toCurrency, rates]);
+
+  // Fetch fee from database
+  useEffect(() => {
+    const fetchFee = async () => {
+      if (!formData.amount || parseFloat(formData.amount) <= 0) { setFeeAmount(0); return; }
+      const pair = `${formData.fromCurrency}-${formData.toCurrency}`;
+      const { data } = await supabase.rpc("calculate_fee", { _currency_pair: pair, _amount: parseFloat(formData.amount) });
+      setFeeAmount(typeof data === "number" ? data : parseFloat(formData.amount) * 0.01);
+    };
+    fetchFee();
+  }, [formData.amount, formData.fromCurrency, formData.toCurrency]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,7 +95,7 @@ const SendTransfer = () => {
 
     setIsLoading(true);
     
-    const fee = parseFloat(formData.amount) * 0.01; // 1% fee
+    const fee = feeAmount;
     
     const { error } = await supabase.from("transfers").insert({
       user_id: user.id,
@@ -252,8 +265,8 @@ const SendTransfer = () => {
                     <span className="font-mono">{formData.amount || 0} {formData.fromCurrency}</span>
                   </div>
                   <div className="flex justify-between text-sm mb-2">
-                    <span className="text-muted-foreground">کارمزد (1%):</span>
-                    <span className="font-mono">{(parseFloat(formData.amount || "0") * 0.01).toFixed(2)} {formData.fromCurrency}</span>
+                    <span className="text-muted-foreground">کارمزد:</span>
+                    <span className="font-mono">{feeAmount.toFixed(2)} {formData.fromCurrency}</span>
                   </div>
                   <div className="flex justify-between font-semibold pt-2 border-t border-border/50">
                     <span>مبلغ دریافتی گیرنده:</span>
