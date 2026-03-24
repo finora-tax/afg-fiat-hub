@@ -15,6 +15,8 @@ import ReceiveTransfer from "./pages/ReceiveTransfer";
 import PendingTransfers from "./pages/PendingTransfers";
 import TransferHistory from "./pages/TransferHistory";
 import Wallets from "./pages/Wallets";
+import NewHawala from "./pages/NewHawala";
+import NewExchange from "./pages/NewExchange";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +40,8 @@ const App = () => (
             <Route path="/transfers/receive" element={<ReceiveTransfer />} />
             <Route path="/transfers/pending" element={<PendingTransfers />} />
             <Route path="/transfers/history" element={<TransferHistory />} />
+            <Route path="/hawala/new" element={<NewHawala />} />
+            <Route path="/exchange/new" element={<NewExchange />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
