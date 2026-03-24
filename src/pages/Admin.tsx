@@ -46,6 +46,7 @@ const Admin = () => {
 
           <TabsContent value="rates"><RateManagement /></TabsContent>
           <TabsContent value="fees"><FeeManagement /></TabsContent>
+          <TabsContent value="transfers"><TransferManagement /></TabsContent>
           <TabsContent value="wallets"><WalletManagement /></TabsContent>
           <TabsContent value="users"><UserManagement /></TabsContent>
           <TabsContent value="kyc"><KYCManagement /></TabsContent>
