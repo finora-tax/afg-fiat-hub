@@ -40,6 +40,8 @@ const App = () => (
             <Route path="/transfers/receive" element={<ReceiveTransfer />} />
             <Route path="/transfers/pending" element={<PendingTransfers />} />
             <Route path="/transfers/history" element={<TransferHistory />} />
+            <Route path="/hawala/new" element={<NewHawala />} />
+            <Route path="/exchange/new" element={<NewExchange />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

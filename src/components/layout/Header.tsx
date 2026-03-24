@@ -48,6 +48,8 @@ const Header = ({ activeTab, onTabChange }: HeaderProps) => {
   const walletLink = { href: "/wallets", label: "کیف پول‌ها", icon: Wallet };
 
   const transferMenuItems = [
+    { href: "/hawala/new", label: "حواله جدید", icon: Send },
+    { href: "/exchange/new", label: "تبدیل ارز جدید", icon: ArrowLeftRight },
     { href: "/transfers/send", label: "ارسال حواله", icon: Send },
     { href: "/transfers/receive", label: "دریافت حواله", icon: Download },
     { href: "/transfers/pending", label: "حواله‌های در انتظار", icon: Clock },
