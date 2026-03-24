@@ -15,6 +15,8 @@ import ReceiveTransfer from "./pages/ReceiveTransfer";
 import PendingTransfers from "./pages/PendingTransfers";
 import TransferHistory from "./pages/TransferHistory";
 import Wallets from "./pages/Wallets";
+import NewHawala from "./pages/NewHawala";
+import NewExchange from "./pages/NewExchange";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
