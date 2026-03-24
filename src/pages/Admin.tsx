@@ -8,6 +8,7 @@ import { FinancialReports } from "@/components/admin/FinancialReports";
 import { AuditLogViewer } from "@/components/admin/AuditLogViewer";
 import { FeeManagement } from "@/components/admin/FeeManagement";
 import { WalletManagement } from "@/components/admin/WalletManagement";
+import { TransferManagement } from "@/components/admin/TransferManagement";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TrendingUp, Users, Shield, BarChart3, Settings, ClipboardList, DollarSign, Wallet } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
