@@ -341,6 +341,13 @@ export type Database = {
         }
         Returns: boolean
       }
+      settle_transfer: {
+        Args: {
+          _new_status: Database["public"]["Enums"]["transfer_status"]
+          _transfer_id: string
+        }
+        Returns: undefined
+      }
       update_own_profile: {
         Args: { _address?: string; _full_name?: string; _phone?: string }
         Returns: undefined
