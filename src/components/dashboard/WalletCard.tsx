@@ -1,6 +1,7 @@
 import { Eye, EyeOff, ArrowUpRight, ArrowDownLeft } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface WalletCardProps {
   currency: string;
@@ -13,6 +14,7 @@ interface WalletCardProps {
 
 const WalletCard = ({ currency, symbol, balance, equivalent, flag, color }: WalletCardProps) => {
   const [isHidden, setIsHidden] = useState(false);
+  const navigate = useNavigate();
 
   const colorClasses = {
     emerald: "from-emerald-500/20 to-emerald-600/5 border-emerald-500/30",
@@ -66,11 +68,11 @@ const WalletCard = ({ currency, symbol, balance, equivalent, flag, color }: Wall
 
       {/* Actions */}
       <div className="flex gap-2">
-        <Button variant="secondary" size="sm" className="flex-1">
+        <Button variant="secondary" size="sm" className="flex-1" onClick={() => navigate("/wallets")}>
           <ArrowDownLeft className="h-4 w-4 ml-1" />
           واریز
         </Button>
-        <Button variant="secondary" size="sm" className="flex-1">
+        <Button variant="secondary" size="sm" className="flex-1" onClick={() => navigate("/wallets")}>
           <ArrowUpRight className="h-4 w-4 ml-1" />
           برداشت
         </Button>
