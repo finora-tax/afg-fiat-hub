@@ -5,13 +5,14 @@ interface RateCardProps {
   toCurrency: string;
   buyRate: number;
   sellRate: number;
-  change: number;
+  change?: number;
   flag1: string;
   flag2: string;
+  updatedAt?: string;
 }
 
-const RateCard = ({ fromCurrency, toCurrency, buyRate, sellRate, change, flag1, flag2 }: RateCardProps) => {
-  const isPositive = change >= 0;
+const RateCard = ({ fromCurrency, toCurrency, buyRate, sellRate, change, flag1, flag2, updatedAt }: RateCardProps) => {
+  const isPositive = (change ?? 0) >= 0;
 
   return (
     <div className="rate-card border border-border/50 group hover:border-primary/30 transition-all duration-500">
@@ -29,20 +30,22 @@ const RateCard = ({ fromCurrency, toCurrency, buyRate, sellRate, change, flag1, 
             <p className="text-xs text-muted-foreground">نرخ لحظه‌ای</p>
           </div>
         </div>
-        
+
         {/* Change Indicator */}
-        <div className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-semibold ${
-          isPositive 
-            ? "bg-success/10 text-success" 
-            : "bg-destructive/10 text-destructive"
-        }`}>
-          {isPositive ? (
-            <TrendingUp className="h-4 w-4" />
-          ) : (
-            <TrendingDown className="h-4 w-4" />
-          )}
-          {Math.abs(change).toFixed(2)}%
-        </div>
+        {change !== undefined && (
+          <div className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-semibold ${
+            isPositive
+              ? "bg-success/10 text-success"
+              : "bg-destructive/10 text-destructive"
+          }`}>
+            {isPositive ? (
+              <TrendingUp className="h-4 w-4" />
+            ) : (
+              <TrendingDown className="h-4 w-4" />
+            )}
+            {Math.abs(change).toFixed(2)}%
+          </div>
+        )}
       </div>
 
       {/* Rates */}
@@ -72,7 +75,11 @@ const RateCard = ({ fromCurrency, toCurrency, buyRate, sellRate, change, flag1, 
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
           <span className="relative inline-flex rounded-full h-2 w-2 bg-success"></span>
         </span>
-        <span className="text-xs text-muted-foreground">به‌روزرسانی لحظه‌ای</span>
+        <span className="text-xs text-muted-foreground">
+          {updatedAt
+            ? `آخرین به‌روزرسانی: ${new Date(updatedAt).toLocaleString("fa-IR")}`
+            : "به‌روزرسانی لحظه‌ای"}
+        </span>
       </div>
     </div>
   );
