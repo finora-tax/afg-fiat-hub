@@ -23,7 +23,8 @@ import {
   Download,
   Clock,
   LogOut,
-  ChevronDown
+  ChevronDown,
+  FileSpreadsheet
 } from "lucide-react";
 
 interface HeaderProps {
@@ -54,6 +55,7 @@ const Header = ({ activeTab, onTabChange }: HeaderProps) => {
     { href: "/transfers/receive", label: "دریافت حواله", icon: Download },
     { href: "/transfers/pending", label: "حواله‌های در انتظار", icon: Clock },
     { href: "/transfers/history", label: "تاریخچه حواله‌ها", icon: History },
+    { href: "/import", label: "ایمپورت گزارش اکسل", icon: FileSpreadsheet },
   ];
 
   const handleSignOut = async () => {
