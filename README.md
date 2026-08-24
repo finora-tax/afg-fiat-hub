@@ -1,73 +1,114 @@
-# Welcome to your Lovable project
+# Afghan Exchange Hub
 
-## Project info
+تو یک تیم حرفه‌ای توسعه نرم‌افزارهای مالی هستی.هدف: طراحی و پیاده‌سازی نرم‌افزار صرافی فیات با تمرکز روی ارز افغانی (AFN).
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
 
-## How can I edit this code?
 
-There are several ways of editing your application.
 
-**Use Lovable**
+دامنه سیستم:
+- صرافی متمرکز (CEX)
+- تبدیل ارزهای فیات با کیف پول داخلی
+- عملیات نیمه‌دستی و واقعی مطابق صرافی‌های سنتی
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
 
-Changes made via Lovable will be committed automatically to this repo.
 
-**Use your preferred IDE**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+ارزهای اصلی:
+- AFN (افغانی)
+- USD (دلار)
+- IRR و EUR (اختیاری)
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-Follow these steps:
+
+
+الزامات کاربری:
+- ثبت‌نام و ورود امن
+- احراز هویت چندسطحی (KYC)
+- کیف پول داخلی برای هر ارز
+- مشاهده موجودی‌ها
+- ثبت سفارش تبدیل ارز (AFN ↔ USD)
+- نمایش نرخ خرید و فروش لحظه‌ای
+- تاریخچه کامل تراکنش‌ها
+- درخواست واریز و برداشت (نقدی / حواله‌ای)
+
+
+
+
+الزامات ادمین:
+- مدیریت کاربران و سطوح دسترسی
+- تأیید و رد KYC
+- تعیین نرخ خرید و فروش افغانی به‌صورت دستی
+- تنظیم کارمزد ثابت و پلکانی
+- مدیریت سفارش‌ها و تسویه‌ها
+- ثبت لاگ مالی و عملیاتی (Audit Log)
+- گزارش‌گیری روزانه، ماهانه و سالانه
+
+
+
+
+هسته مالی:
+- موتور تبدیل ارز داخلی
+- محاسبه دقیق کارمزد
+- جلوگیری از موجودی منفی
+- تسویه اتمیک بین کیف پول‌ها
+- پشتیبانی از نرخ ثابت و شناور
+
+
+
+
+امنیت و کنترل:
+- هش رمز عبور
+- محدودیت برداشت روزانه
+- ثبت لاگ امنیتی
+- سطح‌بندی دسترسی
+- قوانین پایه AML
+
+
+
+
+تکنولوژی:
+- Backend: Node.js (NestJS) یا Django
+- Database: PostgreSQL
+- Cache: Redis
+- API: REST
+- Real-time نرخ‌ها: WebSocket
+- Docker-ready
+
+
+
+
+خروجی مورد انتظار:
+- معماری کامل سیستم
+- طراحی دیتابیس (ERD)
+- تعریف دقیق API Endpoints
+- فلو عملیاتی تبدیل AFN به USD
+- نمونه کد Backend قابل اجرا
+- ملاحظات امنیتی و مقیاس‌پذیری
+
+
+
+
+همه بخش‌ها باید واقعی، عملیاتی و قابل پیاده‌سازی در محیط production باشند.
+
+This project was built with [Lovable](https://lovable.dev).
+
+**Live app**: https://afg-fiat-hub.lovable.app
+
+## Build with Lovable
+
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/7f519378-89c0-432b-8491-26e41d0c32b9).
+
+- **Ship faster**: describe what you want to build and Lovable handles the code.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+
+## Development
+
+Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
+git clone <this-repository-url>
+cd <repository-name>
 npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
 ```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
